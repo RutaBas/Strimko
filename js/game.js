@@ -13,7 +13,7 @@
 
   // Build version — shown in Settings so you can confirm which code loaded.
   // Keep in sync with sw.js CACHE_NAME on every deploy.
-  var APP_VERSION = "v5";
+  var APP_VERSION = "v6";
 
   // Stream thread palette (index by streamId, wrap for 7x7).
   var SC = ["#3FE0C5", "#6C8CFF", "#F06AA6", "#FFB24A", "#9B7BFF", "#5DD6A0", "#E8C24A"];
@@ -694,8 +694,8 @@
     dailyWinButtons();
   }
 
-  function casualWinButtons() { var b = $("btn-next"); b.hidden = false; b.innerHTML = "Next puzzle &rarr;"; $("btn-replay").hidden = false; }
-  function dailyWinButtons() { $("btn-next").hidden = true; $("btn-replay").hidden = false; }
+  function casualWinButtons() { var b = $("btn-next"); b.hidden = false; b.innerHTML = "Next puzzle &rarr;"; }
+  function dailyWinButtons() { $("btn-next").hidden = true; }
 
   function renderDailyCard() {
     var day = dayNumber();
@@ -880,11 +880,6 @@
 
     // win screen
     $("btn-share").addEventListener("click", share);
-    $("btn-replay").addEventListener("click", function () {
-      var t = G.puzzle.tier, i = G.puzzle.index;
-      var p = L.generatePuzzle(t, i); p.tier = t; p.index = i;
-      loadPuzzle(p, null, 0);
-    });
     $("btn-next").addEventListener("click", function () {
       if (G.daily) { show("home"); } else { newPuzzle(G.puzzle.tier); }
     });

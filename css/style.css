@@ -260,25 +260,23 @@ body{
 .stat{ flex:1; border:1px solid var(--line); border-radius:14px; padding:12px 6px; text-align:center; background:#ffffff06; }
 .stat .v{ font-family:'JetBrains Mono',monospace; font-weight:700; font-size:20px; color:var(--aqua); }
 .stat .k{ font-size:10px; color:var(--dim); letter-spacing:.08em; text-transform:uppercase; margin-top:3px; }
-.share{
-  width:100%; border:none; border-radius:16px; padding:15px; font-family:'Space Grotesk',sans-serif;
-  font-weight:700; font-size:16px; color:#062018; background:linear-gradient(180deg,#5DF0D6,#3FE0C5);
-  box-shadow:0 0 22px #3fe0c555; margin-bottom:10px; cursor:pointer; transition:transform .1s ease;
-}
-.share:active{ transform:scale(.98); }
 .winrow{ display:flex; gap:10px; width:100%; }
 .winrow button{
-  flex:1; border:1px solid var(--line); border-radius:16px; padding:13px; background:#ffffff08;
-  color:var(--text); font-family:'Space Grotesk',sans-serif; font-weight:500; font-size:14px; cursor:pointer;
+  flex:1; border:1px solid var(--line); border-radius:16px; padding:15px; background:#ffffff08;
+  color:var(--text); font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:15px; cursor:pointer;
   transition:transform .1s ease;
 }
 .winrow button:active{ transform:scale(.97); }
-.winhome{
-  width:100%; margin-top:10px; border:1px solid var(--line); border-radius:16px; padding:13px;
-  background:transparent; color:var(--dim); font-family:'Space Grotesk',sans-serif; font-weight:600;
-  font-size:14px; cursor:pointer; transition:transform .1s ease, color .15s, border-color .15s;
+.winrow button.primary{
+  border:none; color:#062018; font-weight:700; background:linear-gradient(180deg,#5DF0D6,#3FE0C5);
+  box-shadow:0 0 20px #3fe0c544;
 }
-.winhome:active{ transform:scale(.98); color:var(--aqua); border-color:var(--aqua); }
+.sharesmall{
+  display:block; margin:12px auto 0; padding:9px 22px; border:1px solid var(--line); border-radius:12px;
+  background:transparent; color:var(--dim); font-family:'Space Grotesk',sans-serif; font-weight:600;
+  font-size:13px; cursor:pointer; transition:transform .1s ease, color .15s, border-color .15s;
+}
+.sharesmall:active{ transform:scale(.97); color:var(--aqua); border-color:var(--aqua); }
 
 /* ================= MODALS ================= */
 .modal{
