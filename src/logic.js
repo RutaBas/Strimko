@@ -937,6 +937,24 @@
     return currentGivens();
   }
 
+  // A stream is "straight" if all its cells share one row or one column. When
+  // every stream is straight the stream constraint just duplicates the row/col
+  // constraints — a dull, un-woven board. Require enough bent streams so the
+  // grid actually looks (and plays) like Strimko.
+  function streamIsStraight(cells, n) {
+    var r0 = (cells[0] / n) | 0, c0 = cells[0] % n, sameR = true, sameC = true;
+    for (var i = 1; i < cells.length; i++) {
+      if (((cells[i] / n) | 0) !== r0) sameR = false;
+      if ((cells[i] % n) !== c0) sameC = false;
+    }
+    return sameR || sameC;
+  }
+  function wovenEnough(streams, n) {
+    var bent = 0;
+    for (var i = 0; i < streams.length; i++) if (!streamIsStraight(streams[i], n)) bent++;
+    return bent >= n - 1;               // at most one straight stream — keeps it woven
+  }
+
   // Exact-grade gate: the hardest technique required must equal the tier target.
   function gradeMatches(tier, res) {
     if (!res.solved) return false;
@@ -955,6 +973,7 @@
     if (!sol) return { seed: seed, failed: "latin" };
     var carve = carveStreams(sol, rng, CARVE_BUDGET);
     if (!carve) return { seed: seed, failed: "carve" };
+    if (!wovenEnough(carve.streams, n)) return { seed: seed, failed: "straight" };
     var givens = chooseGivens(sol, carve.streams, n, tier, rng);
     return {
       seed: seed, cfg: cfg, n: n, solution: sol,
@@ -1006,12 +1025,13 @@
 
   // Empirical acceptance sweep for tuning (used by dev-check).
   function sweepAcceptance(tier, nCandidates) {
-    var reasons = { latinFail: 0, carveFail: 0, notSolved: 0, wrongGrade: 0, nonUnique: 0, accepted: 0 };
+    var reasons = { latinFail: 0, carveFail: 0, straightFail: 0, notSolved: 0, wrongGrade: 0, nonUnique: 0, accepted: 0 };
     var t0 = Date.now();
     for (var k = 0; k < nCandidates; k++) {
       var cand = buildCandidate(tier, "sweep", k);
       if (cand.failed === "latin") { reasons.latinFail++; continue; }
       if (cand.failed === "carve") { reasons.carveFail++; continue; }
+      if (cand.failed === "straight") { reasons.straightFail++; continue; }
       var puzzle = { n: cand.n, streams: cand.streams, streamId: cand.streamId, givens: cand.givens };
       var res = solve(puzzle, { truth: cand.solution });
       if (res.truthViolations.length) {

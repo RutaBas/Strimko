@@ -11,6 +11,10 @@
 
   var L = window.StrimkoLogic;
 
+  // Build version — shown in Settings so you can confirm which code loaded.
+  // Keep in sync with sw.js CACHE_NAME on every deploy.
+  var APP_VERSION = "v5";
+
   // Stream thread palette (index by streamId, wrap for 7x7).
   var SC = ["#3FE0C5", "#6C8CFF", "#F06AA6", "#FFB24A", "#9B7BFF", "#5DD6A0", "#E8C24A"];
 
@@ -181,7 +185,8 @@
       var s2 = sid[r][c];
       nd += '<circle cx="' + cx(c) + '" cy="' + cy(r) + '" r="0.34" fill="#1B2238" stroke="' + SC[s2 % SC.length] + '" stroke-width="0.05"/>';
       if (values && values[r][c])
-        nd += '<text x="' + cx(c) + '" y="' + (cy(r) + 0.015) + '" text-anchor="middle" dominant-baseline="central" font-family="JetBrains Mono,monospace" font-weight="700" font-size="0.4" fill="#EAF2F5">' + values[r][c] + '</text>';
+        // dy offset instead of dominant-baseline="central" (unreliable on iOS Safari)
+        nd += '<text x="' + cx(c) + '" y="' + cy(r) + '" dy="0.35em" text-anchor="middle" font-family="JetBrains Mono,monospace" font-weight="700" font-size="0.42" fill="#EAF2F5">' + values[r][c] + '</text>';
     }
     return '<svg viewBox="-0.1 -0.1 ' + (n + 0.2) + ' ' + (n + 0.2) + '" width="100%" xmlns="http://www.w3.org/2000/svg">' +
       '<g>' + th + nd + '</g></svg>';
@@ -211,10 +216,9 @@
     board.innerHTML = "";
     board.style.setProperty("--pn", n);
 
-    // threads SVG behind
-    var sidObj = G.sid;
-    var svg = svgBoardThreads(n, sidObj);
-    board.insertAdjacentHTML("beforeend", svg);
+    // threads SVG behind the beads (plain strokes, no filter — iOS WebKit drops
+    // thin filtered <line>s)
+    board.insertAdjacentHTML("beforeend", svgBoardThreads(n, G.sid));
 
     var cells = document.createElement("div");
     cells.className = "cells";
@@ -690,8 +694,8 @@
     dailyWinButtons();
   }
 
-  function casualWinButtons() { $("btn-next").innerHTML = "Next puzzle &rarr;"; $("btn-replay").hidden = false; }
-  function dailyWinButtons() { $("btn-next").textContent = "Back to home"; $("btn-replay").hidden = false; }
+  function casualWinButtons() { var b = $("btn-next"); b.hidden = false; b.innerHTML = "Next puzzle &rarr;"; $("btn-replay").hidden = false; }
+  function dailyWinButtons() { $("btn-next").hidden = true; $("btn-replay").hidden = false; }
 
   function renderDailyCard() {
     var day = dayNumber();
@@ -843,6 +847,7 @@
 
   function init() {
     $("brandmark").innerHTML = brandmarkSVG();
+    $("app-version").textContent = "Version " + APP_VERSION;
     renderSettings();
     show("home");
 
@@ -883,6 +888,7 @@
     $("btn-next").addEventListener("click", function () {
       if (G.daily) { show("home"); } else { newPuzzle(G.puzzle.tier); }
     });
+    $("btn-home").addEventListener("click", function () { show("home"); });
 
     // settings modal
     $("btn-settings").addEventListener("click", function () { $("settings").hidden = false; });
