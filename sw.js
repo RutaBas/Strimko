@@ -1,6 +1,6 @@
 /* Strimko service worker — cache-first app shell for offline play.
    Bump CACHE_NAME on every deploy to invalidate the old shell. */
-var CACHE_NAME = "strimko-v3";
+var CACHE_NAME = "strimko-v4";
 
 var LOCAL_ASSETS = [
   "./",

@@ -173,9 +173,9 @@
     for (var r = 0; r < n; r++) for (var c = 0; c < n; c++) {
       var s = sid[r][c];
       if (c + 1 < n && sid[r][c + 1] === s)
-        th += '<line x1="' + cx(c) + '" y1="' + cy(r) + '" x2="' + cx(c + 1) + '" y2="' + cy(r) + '" stroke="' + SC[s % SC.length] + '" stroke-width="0.26" stroke-linecap="round"/>';
+        th += '<line x1="' + cx(c) + '" y1="' + cy(r) + '" x2="' + cx(c + 1) + '" y2="' + cy(r) + '" stroke="' + SC[s % SC.length] + '" stroke-width="0.15" stroke-linecap="round"/>';
       if (r + 1 < n && sid[r + 1][c] === s)
-        th += '<line x1="' + cx(c) + '" y1="' + cy(r) + '" x2="' + cx(c) + '" y2="' + cy(r + 1) + '" stroke="' + SC[s % SC.length] + '" stroke-width="0.26" stroke-linecap="round"/>';
+        th += '<line x1="' + cx(c) + '" y1="' + cy(r) + '" x2="' + cx(c) + '" y2="' + cy(r + 1) + '" stroke="' + SC[s % SC.length] + '" stroke-width="0.15" stroke-linecap="round"/>';
     }
     for (r = 0; r < n; r++) for (c = 0; c < n; c++) {
       var s2 = sid[r][c];
@@ -184,8 +184,7 @@
         nd += '<text x="' + cx(c) + '" y="' + (cy(r) + 0.015) + '" text-anchor="middle" dominant-baseline="central" font-family="JetBrains Mono,monospace" font-weight="700" font-size="0.4" fill="#EAF2F5">' + values[r][c] + '</text>';
     }
     return '<svg viewBox="-0.1 -0.1 ' + (n + 0.2) + ' ' + (n + 0.2) + '" width="100%" xmlns="http://www.w3.org/2000/svg">' +
-      '<defs><filter id="g" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="0.03" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>' +
-      '<g filter="url(#g)">' + th + nd + '</g></svg>';
+      '<g>' + th + nd + '</g></svg>';
   }
 
   // ---------------------------------------------------------- game state --
@@ -243,13 +242,14 @@
     for (var r = 0; r < n; r++) for (var c = 0; c < n; c++) {
       var s = sid[r][c];
       if (c + 1 < n && sid[r][c + 1] === s)
-        th += '<line x1="' + (c + 0.5) + '" y1="' + (r + 0.5) + '" x2="' + (c + 1.5) + '" y2="' + (r + 0.5) + '" stroke="' + SC[s % SC.length] + '" stroke-width="0.26" stroke-linecap="round"/>';
+        th += '<line x1="' + (c + 0.5) + '" y1="' + (r + 0.5) + '" x2="' + (c + 1.5) + '" y2="' + (r + 0.5) + '" stroke="' + SC[s % SC.length] + '" stroke-width="0.15" stroke-linecap="round"/>';
       if (r + 1 < n && sid[r + 1][c] === s)
-        th += '<line x1="' + (c + 0.5) + '" y1="' + (r + 0.5) + '" x2="' + (c + 0.5) + '" y2="' + (r + 1.5) + '" stroke="' + SC[s % SC.length] + '" stroke-width="0.26" stroke-linecap="round"/>';
+        th += '<line x1="' + (c + 0.5) + '" y1="' + (r + 0.5) + '" x2="' + (c + 0.5) + '" y2="' + (r + 1.5) + '" stroke="' + SC[s % SC.length] + '" stroke-width="0.15" stroke-linecap="round"/>';
     }
-    return '<svg class="threads" viewBox="0 0 ' + n + ' ' + n + '" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">' +
-      '<defs><filter id="tg" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="0.03" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>' +
-      '<g filter="url(#tg)">' + th + "</g></svg>";
+    // No SVG filter: iOS WebKit drops thin/vertical filtered <line>s, which made
+    // some in-stream connections vanish on device. Plain strokes render reliably.
+    return '<svg class="threads" viewBox="0 0 ' + n + ' ' + n + '" xmlns="http://www.w3.org/2000/svg">' +
+      '<g>' + th + "</g></svg>";
   }
 
   function cellEl(r, c) {
