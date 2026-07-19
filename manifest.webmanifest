@@ -1,0 +1,16 @@
+{
+  "name": "Strimko",
+  "short_name": "Strimko",
+  "description": "Luminous Threads — row, column and stream, each 1..n exactly once.",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#12172A",
+  "theme_color": "#12172A",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

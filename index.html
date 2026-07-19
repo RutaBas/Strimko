@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+  <title>Strimko</title>
+
+  <meta name="theme-color" content="#12172A">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Strimko">
+  <link rel="apple-touch-icon" href="icons/icon-180.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+  <link rel="manifest" href="manifest.webmanifest">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- live constellation backdrop (all screens) -->
+  <canvas id="constellation" aria-hidden="true"></canvas>
+
+  <!-- ===================== HOME / START ===================== -->
+  <main id="screen-home" class="screen active">
+    <div class="home-inner">
+      <div class="brandmark" id="brandmark" aria-hidden="true"></div>
+      <h1 class="brand">Strimko</h1>
+      <p class="tag">Row &middot; column &middot; <b>stream</b> — each holds 1&ndash;n exactly once.</p>
+
+      <button id="btn-play" class="play">Play</button>
+      <button id="btn-continue" class="cont" hidden>
+        <span>Continue</span><small id="cont-info"></small>
+      </button>
+
+      <button id="btn-daily" class="daily">
+        <span class="daily-glow" aria-hidden="true"></span>
+        <span class="daily-head">
+          <span class="daily-title">Daily Puzzle</span>
+          <span class="daily-date" id="daily-date"></span>
+        </span>
+        <span class="daily-sub">7 &times; 7 &middot; Tapestry &middot; same board for everyone</span>
+        <span class="daily-state" id="daily-state">Play today&rsquo;s puzzle &#9656;</span>
+      </button>
+
+      <div class="difflabel">Or choose a strand</div>
+      <div class="diffs" id="diffs">
+        <button class="diff" data-tier="1" style="--dc:var(--aqua)">
+          <span class="drow"><span class="dn">Strand</span><span class="dot"></span></span>
+          <span class="dz">4 &times; 4 &middot; gentle</span>
+        </button>
+        <button class="diff" data-tier="2" style="--dc:var(--violet)">
+          <span class="drow"><span class="dn">Braid</span><span class="dot"></span></span>
+          <span class="dz">5 &times; 5 &middot; classic</span>
+        </button>
+        <button class="diff" data-tier="3" style="--dc:var(--amber)">
+          <span class="drow"><span class="dn">Weave</span><span class="dot"></span></span>
+          <span class="dz">6 &times; 6 &middot; tricky</span>
+        </button>
+        <button class="diff" data-tier="4" style="--dc:var(--pink)">
+          <span class="drow"><span class="dn">Tapestry</span><span class="dot"></span></span>
+          <span class="dz">7 &times; 7 &middot; expert</span>
+        </button>
+      </div>
+
+      <div class="foot" id="home-foot"></div>
+      <button id="btn-settings" class="linkbtn" aria-label="Settings">Sound &amp; settings</button>
+    </div>
+  </main>
+
+  <!-- ===================== GAME ===================== -->
+  <main id="screen-game" class="screen">
+    <div class="topbar">
+      <button id="btn-back" class="iconbtn" aria-label="Back to menu">&#8592;</button>
+      <div class="topmid">
+        <span id="difflabel" class="diffname">Strand</span>
+        <span id="timer" class="timer">0:00</span>
+      </div>
+      <button id="btn-new" class="iconbtn" aria-label="New game">&#8635;</button>
+    </div>
+
+    <div class="boardwrap">
+      <div id="board" class="board" aria-label="Strimko board"></div>
+    </div>
+
+    <div id="hintline" class="hintline" hidden></div>
+
+    <div id="pad" class="pad"></div>
+
+    <div class="actions">
+      <button id="btn-undo" class="act" disabled><span class="ai">&#8630;</span>Undo</button>
+      <button id="btn-hint" class="act"><span class="ai">&#9788;</span>Hint</button>
+      <button id="btn-erase" class="act"><span class="ai">&#9003;</span>Erase</button>
+      <button id="btn-pencil" class="act"><span class="ai">&#9998;</span>Marks</button>
+    </div>
+  </main>
+
+  <!-- ===================== WIN ===================== -->
+  <main id="screen-win" class="screen">
+    <canvas id="spark" class="spark" aria-hidden="true"></canvas>
+    <div class="win-inner">
+      <div class="wintitle">Woven!</div>
+      <div class="winsub" id="winsub">Strand &middot; solved clean</div>
+      <div id="winboard" class="winboard"></div>
+      <div class="stats">
+        <div class="stat"><div class="v" id="win-time">0:00</div><div class="k" id="win-time-k">Time</div></div>
+        <div class="stat"><div class="v" id="win-streak">0</div><div class="k" id="win-streak-k">Streak</div></div>
+        <div class="stat"><div class="v" id="win-best">—</div><div class="k" id="win-best-k">Best</div></div>
+      </div>
+      <button id="btn-share" class="share">Share result</button>
+      <div class="winrow">
+        <button id="btn-replay">Replay</button>
+        <button id="btn-next">Next puzzle &rarr;</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- ===================== SETTINGS MODAL ===================== -->
+  <div id="settings" class="modal" hidden>
+    <div class="panel">
+      <b>Settings</b>
+      <button id="tog-sound" class="togbtn">Sound: On</button>
+      <button id="tog-haptics" class="togbtn">Haptics: On</button>
+      <button id="tog-conflict" class="togbtn">Conflict highlight: On</button>
+      <button id="settings-close" class="togbtn close">Close</button>
+    </div>
+  </div>
+
+  <!-- ===================== HOW TO PLAY ===================== -->
+  <div id="howto" class="modal" hidden>
+    <div class="panel howpanel">
+      <b>How to play</b>
+      <div id="howboard" class="howboard"></div>
+      <p>Fill every cell 1&ndash;n so each <b>row</b>, each <b>column</b>, and each
+        <b class="aqua">stream</b> (a chain of beads on one thread) holds every number
+        exactly once.</p>
+      <p class="dim">Tap a bead, then a number. Tap the same number or Erase to clear.
+        Stuck? Hint reveals the next logical step. No fail state — clashes just glow.</p>
+      <button id="howto-close" class="togbtn close">Start playing</button>
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+
+  <script src="src/logic.js"></script>
+  <script src="js/game.js"></script>
+</body>
+</html>
